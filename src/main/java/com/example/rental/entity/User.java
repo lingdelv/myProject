@@ -1,9 +1,7 @@
 package com.example.rental.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -20,7 +18,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author teacher_shi
@@ -63,13 +61,13 @@ public class User implements Serializable, UserDetails {
     private String nickname;
 
     @ApiModelProperty("用户部门id")
-    private Integer depyId;
+    private Integer deptId;
 
     @ApiModelProperty("用户部门名称")
     private String deptName;
 
     @ApiModelProperty("性别")
-    private Boolean gender;
+    private Integer gender;
 
     @ApiModelProperty("电话")
     private String phone;
@@ -81,12 +79,14 @@ public class User implements Serializable, UserDetails {
     private String avatar;
 
     @ApiModelProperty("是否管理员")
-    private Boolean isAdmin;
+    private Integer isAdmin;
 
     @ApiModelProperty("创建时间")
+    @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
     @ApiModelProperty("修改时间")
+    @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
 
     @ApiModelProperty("是否删除")

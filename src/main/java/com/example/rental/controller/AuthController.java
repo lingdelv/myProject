@@ -102,7 +102,7 @@ public class AuthController {
      *
      * @return Result 包含用户信息的响应结果。如果认证信息为空，则返回失败结果；否则返回成功结果并包含用户信息。
      */
-    @GetMapping("/info")
+    @GetMapping("/getInfo")
     public Result getUserInfo(){
         // 从SecurityContextHolder中获取当前的认证信息
         //从securityContextHolder中获取认证信息
@@ -116,11 +116,14 @@ public class AuthController {
         // 从认证信息中获取用户实体
         User user = (User) authentication.getPrincipal();
 
-        // 查询用户的角色名
+/*        // 查询用户的角色名
         List<String> list = userService.selectRoleName(user.getId());
-
         // 将角色名列表转换为数组
-        Object[] array = list.toArray();
+        Object[] array = list.toArray();*/
+        List<Permission> permissionList = user.getPermissionsList();
+        Object[] array = permissionList.stream().filter(Objects::nonNull)
+                .map(Permission::getPermissionCode)
+                .toArray();
 
         // 创建UserInfoVo对象，封装用户信息和角色信息
         UserInfoVo userInfoVo = new UserInfoVo(user.getId(),
@@ -144,9 +147,35 @@ public class AuthController {
         List<Permission> permissionList = user.getPermissionsList();
         //获取当前用户菜单
         //将permission_type为2的移除，不需要生成对应的菜单
-        permissionList.removeIf(permission -> Objects.equals(permission.getPermissionType(),2));
-        List<RouteVo> routeVoList =RouteTreeUtils.buildRouteTree(permissionList,0);
+        List<Permission> permissions = permissionList.stream()
+                .filter(item -> item!=null && item.getPermissionType()!=2)
+                .toList();
+
+        List<RouteVo> routeVoList =RouteTreeUtils.buildRouteTree(permissions,0);
         return Result.success(routeVoList).setMessage("获取菜单成功");
+    }
+
+    @PostMapping("/logout")
+    public Result logout(HttpServletRequest request) {
+        String token = request.getHeader("token");
+        if (StrUtil.isEmpty(token)){
+            token = request.getParameter("token");
+        }
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            // 获取认证信息中的用户名
+            String username = authentication.getName();
+            // 删除Redis中的令牌
+            redisUtils.delete("token:" + token);
+            // 清除SecurityContextHolder中的认证信息
+            SecurityContextHolder.clearContext();
+            // 返回成功结果
+            return Result.success().setMessage("退出成功");
+        } else {
+            // 如果认证信息为空，则返回失败结果
+            return Result.fail().setMessage("退出失败");
+        }
+
     }
 
 

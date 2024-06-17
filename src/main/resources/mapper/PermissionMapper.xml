@@ -6,7 +6,7 @@
             parameterType="com.example.rental.entity.User">
         select distinct p.id,
                         p.pid,
-                        p.permission_lable,
+                        p.permission_label,
                         p.permission_code,
                         p.route_path,
                         p.route_name,
@@ -21,6 +21,12 @@
                  left join sys_permission p on p.id = rp.permission_id
         where u.id = #{id}
         order by p.id,p.order_num
+    </select>
+    <select id="selectPermissionListByRoleId" resultType="com.example.rental.entity.Permission">
+        select *
+        from sys_permission p
+                 inner join sys_role_permission rp on p.id = rp.permission_id
+        where rp.role_id = #{roleId}
     </select>
 
 

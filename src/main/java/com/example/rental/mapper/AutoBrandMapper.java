@@ -1,16 +1,13 @@
 package com.example.rental.mapper;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.rental.entity.AutoBrand;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 
-/**
- * <p>
- *  Mapper 接口
- * </p>
- *
- * @author teacher_shi
- * @since 2024-06-08
- */
+
 public interface AutoBrandMapper extends BaseMapper<AutoBrand> {
+    Page<AutoBrand> searchByPage(@Param("page") Page<AutoBrand> page,
+                                 @Param("autoBrand") AutoBrand autoBrand);
 
 }

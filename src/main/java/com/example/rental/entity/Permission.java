@@ -1,9 +1,7 @@
 package com.example.rental.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,14 +13,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-/**
- * <p>
- *
- * </p>
- *
- * @author teacher_shi
- * @since 2024-06-08
- */
 @Getter
 @Setter
 @Accessors(chain = true)
@@ -37,13 +27,13 @@ public class Permission implements Serializable {
     private Integer id;
 
     @ApiModelProperty("权限名称")
-    private String permissionLable;
+    private String permissionLabel;
 
     @ApiModelProperty("父权限id")
     private Integer pid;
 
     @ApiModelProperty("父权限名称")
-    private String parentLable;
+    private String parentLabel;
 
     @ApiModelProperty("权限标识")
     private String permissionCode;
@@ -67,9 +57,11 @@ public class Permission implements Serializable {
     private Integer orderNum;
 
     @ApiModelProperty("创建时间")
+    @TableField(fill = FieldFill.INSERT) //插入时自动填入时间
     private LocalDateTime createTime;
 
     @ApiModelProperty("修改时间")
+    @TableField(fill = FieldFill.INSERT_UPDATE) //插入，修改时自动填入时间
     private LocalDateTime updateTime;
 
     @ApiModelProperty("备注")

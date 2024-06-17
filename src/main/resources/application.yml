@@ -41,4 +41,13 @@ encoder:
 request:
   login-url: /rental/user/login
 
+# 阿里云OSS配置
+aliyun:
+  oss:
+    endpoint: oss-cn-shenzhen.aliyuncs.com
+    access-key-id:
+    access-key-secret:
+    bucket-name:
+
+
 

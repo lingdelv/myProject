@@ -5,14 +5,20 @@ import jakarta.annotation.Resource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+
+
+import java.util.Arrays;
+
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
 
     @Resource
@@ -32,6 +38,7 @@ public class SecurityConfig {
 
     @Resource
     private VerifyTokenFilter verifyTokenFilter;
+
 
     /**
      * 配置安全过滤链
@@ -78,7 +85,7 @@ public class SecurityConfig {
 
         )
         // 配置跨域请求支持，默认设置
-        .cors(Customizer.withDefaults())
+//        .cors(cors -> cors.configurationSource(corsConfigurationSource()))
         // 禁用CSRF保护
         .csrf(csrf -> csrf.disable())
         // 设置用户详情服务为customerUserDetailsService
@@ -88,8 +95,21 @@ public class SecurityConfig {
         return http.build();
     }
 
+    // 定义CORS配置源
+   /* @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.addAllowedOrigin("*"); // 允许所有域
+        configuration.addAllowedMethod("*"); // 允许所有HTTP方法
+        configuration.addAllowedHeader("*"); // 允许所有请求头
+        configuration.setAllowCredentials(true); // 允许发送凭证
 
-        //旧版本写法
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }*/
+
+    //旧版本写法
         /*http.formLogin()
                 .loginProcessingUrl("rental/user/login")
                 .successHandler(loginSuccessHandler)

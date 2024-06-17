@@ -1,5 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.rental.mapper.AutoBrandMapper">
+    <!-- 根据条件查询汽车品牌信息，支持按制造商ID和品牌名称模糊搜索 -->
+    <select id="searchByPage" resultType="autoBrand">
+        <!-- 查询汽车品牌和制造商名称，通过制造商ID关联两个表 -->
+        select  m.name as makerName,b.brand_name,b.id,b.mid
+        from auto_brand b , auto_maker m
+        where b.mid = m.id
+        <!-- 如果传入了制造商ID，则按制造商ID过滤结果 -->
+        <if test="autoBrand.mid != null">
+            and b.mid = #{autoBrand.mid}
+        </if>
+        <!-- 如果传入了品牌名称，则按品牌名称进行模糊搜索 -->
+        <if test="autoBrand.brandName != null and autoBrand.brandName != ''">
+            and b.brand_name like concat('%',#{autoBrand.brandName},'%')
+        </if>
+        <!-- 只返回未被删除的汽车品牌 -->
+        and b.deleted = 0
+        <!-- 按制造商的字母顺序排序 -->
+        order by m.order_letter
+    </select>
+
 
 </mapper>
