@@ -1,12 +1,17 @@
 package com.example.rental.controller;
 
+import cn.hutool.poi.excel.ExcelUtil;
+import cn.hutool.poi.excel.ExcelWriter;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.rental.entity.AutoBrand;
 import com.example.rental.service.IAutoBrandService;
 import com.example.rental.utils.Result;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -56,6 +61,29 @@ public class AutoBrandController {
         // 调用汽车品牌服务删除指定ID的品牌，根据删除结果返回成功或失败的结果对象
         return autoBrandService.removeByIds(idList)? Result.success() : Result.fail();
     }
+
+    @GetMapping("/{id}")
+    public Result getMakersByIdById(@PathVariable Integer id) {
+        List<AutoBrand> res = autoBrandService.getMakersById(id);
+        return Result.success().setData(res);
+    }
+
+    //数据导出
+    @GetMapping("exportExcel")
+    public void export(HttpServletResponse response) throws Exception {
+        List<AutoBrand> list = autoBrandService.list();
+        ExcelWriter writer = ExcelUtil.getWriter(true);
+        writer.addHeaderAlias("brandName", "品牌名称");
+        writer.addHeaderAlias("deleted", "是否删除");
+        writer.write(list, true);
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset:utf-8");
+        String fileName = URLEncoder.encode("汽车品牌信息", StandardCharsets.UTF_8);
+        response.setHeader("Content-disposition", "attachment;filename=" + fileName + ".xlsx");
+        writer.flush(response.getOutputStream(), true);
+        writer.close();
+
+    }
+
 
 
 }

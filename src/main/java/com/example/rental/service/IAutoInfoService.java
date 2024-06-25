@@ -1,16 +1,19 @@
 package com.example.rental.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.rental.entity.AutoInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
 
-/**
- * <p>
- *  服务类
- * </p>
- *
- * @author teacher_shi
- * @since 2024-06-08
- */
+import java.util.List;
+
+
 public interface IAutoInfoService extends IService<AutoInfo> {
 
+    Page<AutoInfo> searchByPage(Page<AutoInfo> page, AutoInfo autoInfo);
+
+    boolean delete(String ids);
+
+    AutoInfo selectByAutoNum(String autoNum);
+
+    List<AutoInfo> searchToMaintain();
 }

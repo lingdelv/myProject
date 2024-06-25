@@ -9,31 +9,43 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.Collections;
 
 @SpringBootTest
+/**
+ * 生成代码的工具类。
+ * 该类配置了生成代码所需的各种常量，包括数据库连接信息、输出目录、包名等。
+ * 通过指定的表名和前缀，可以从数据库中生成对应的实体类、DAO层代码等。
+ */
 public class GeneratorCode {
 
+    // 作者名称常量，用于生成代码中的作者信息。
     private static final String AUTHOR = "teacher_shi";
 
+    // JDBC连接URL，用于连接到数据库。
     private static final String JDBC_URL="jdbc:mysql://localhost:3306/auto_rental";
 
+    // JDBC用户名，用于数据库认证。
     private static final String JDBC_USERNAME="root";
 
+    // JDBC密码，用于数据库认证。
     private static final String JDBC_PASSWORD="123456";
 
+    // 生成代码的输出目录。
     private static final String OUT_DIR=".\\src\\main\\java";
 
+    // 生成代码的包名。
     private static final String PACKAGE_NAME="com.example";
 
+    // 项目模块名，用于生成包路径。
     private static final String MODULE_NAME="rental";
 
+    // 需要生成代码的表名数组。
     private static final String[] TABLES={
             "auto_maker","auto_brand","auto_info",
             "sys_user_role","sys_user","sys_role_permission","sys_role","sys_permission","sys_dept",
             "busi_violation","busi_rental_type","busi_order","busi_maintain","busi_customer"
-
     };
 
+    // 表名前缀数组，用于过滤或指定生成代码的表。
     private static final String[] PREFIX={"busi_","sys_"};
-
     /**
      * 自动化生成代码的测试方法。
      * 使用FastAutoGenerator工具类，通过配置各项参数，实现根据数据库表结构自动生成对应的Java代码和配置文件。

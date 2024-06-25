@@ -9,6 +9,7 @@ import com.example.rental.utils.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,6 +47,7 @@ public class UserController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('sys:user:add')")
     public Result save(@RequestBody User user){
         User user1=userService.selectByUsername(user.getUsername());
         if (user1!=null){
@@ -63,6 +65,7 @@ public class UserController {
     }
 
     @PutMapping
+    @PreAuthorize("hasAuthority('sys:user:edit')")
     public Result update(@RequestBody User user){
         User user1=userService.selectByUsername(user.getUsername());
         if (user1!=null&&!user1.getId().equals(user.getId())){
@@ -75,6 +78,7 @@ public class UserController {
     }
 
     @DeleteMapping("{ids}")
+    @PreAuthorize("hasAuthority('sys:user:delete')")
     public Result delete(@PathVariable String ids){
         return userService.delete(ids)?Result.success():Result.fail();
     }
@@ -89,6 +93,7 @@ public class UserController {
 
     //
     @GetMapping("bind/{userId}/{roleIds}")
+    @PreAuthorize("hasAuthority('sys:user:bind')")
     public Result bindRole(@PathVariable Integer userId,
                            @PathVariable String roleIds){
         List<Integer> list = Arrays.stream(roleIds.split(","))

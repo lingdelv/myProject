@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.rental.mapper.FinanceMapper">
+    <select id="countDayRentalNumReturnNum" resultType="com.example.rental.vo.FinanceNumDayVo">
+        select
+            COALESCE(r.hours, ret.hours) as hours,
+            COALESCE(r.rentalNum, 0) as rentalNum,
+            COALESCE(ret.returnNum, 0) as returnNum
+        from
+            (select count(id) as rentalNum, HOUR(rental_time) as hours
+             from busi_order
+             where deleted = 0
+               and date(rental_time) = date(now())
+             group by hours) r
+                left join
+            (select count(id) as returnNum, HOUR(return_time) as hours
+             from busi_order
+             where deleted = 0
+               and return_time is not null
+               and date(return_time) = date(now())
+             group by hours) ret
+            on r.hours = ret.hours
+
+        union
+
+        select
+            COALESCE(r.hours, ret.hours) as hours,
+            COALESCE(r.rentalNum, 0) as rentalNum,
+            COALESCE(ret.returnNum, 0) as returnNum
+        from
+            (select count(id) as rentalNum, HOUR(o.rental_time) as hours
+             from busi_order o
+             where o.deleted = 0
+               and date(o.rental_time) = date(now())
+             group by hours) r
+                right join
+            (select count(id) as returnNum, HOUR(o.return_time) as hours
+             from busi_order o
+             where o.deleted = 0
+               and o.return_time is not null
+               and date(o.return_time) = date(now())
+             group by hours) ret
+            on r.hours = ret.hours
+        order by hours;
+
+
+    </select>
+    <select id="sumRentPay" resultType="com.example.rental.vo.FinanceCostVo">
+        select sum(rent_payable) countRentPayable,
+               sum(rent_actual) countRentActual
+        from busi_order
+        where deleted = 0
+          and return_time is not null
+          and date(return_time) = date(now())
+    </select>
+    <select id="sumDeposit" resultType="java.lang.Integer">
+        select sum(deposit)
+        from busi_order
+        where deleted = 0
+          and date(return_time) = date(now())
+    </select>
+    <!--月报数据-->
+    <select id="countRentalNumReturnNumMonth" resultType="com.example.rental.vo.FinanceNumMonthVo">
+        select
+            COALESCE(r.days, ret.days) as days,
+            COALESCE(r.rentalNum, 0) as rentalNum,
+            COALESCE(ret.returnNum, 0) as returnNum
+        from
+            (select count(id) as rentalNum, day(date (rental_time)) as days
+             from busi_order
+             where deleted = 0
+               and month(rental_time) = month(now())
+             group by days) r
+                left join
+            (select count(id) as returnNum, day(date(return_time)) as days
+             from busi_order
+             where deleted = 0
+               and return_time is not null
+               and month(return_time) = month(now())
+             group by days) ret
+            on r.days = ret.days
+
+        union
+
+        select
+            COALESCE(r.days, ret.days) as days,
+            COALESCE(r.rentalNum, 0) as rentalNum,
+            COALESCE(ret.returnNum, 0) as returnNum
+        from
+            (select count(id) as rentalNum, day(date(rental_time)) as days
+             from busi_order
+             where deleted = 0
+               and month(rental_time) = month(now())
+             group by days) r
+                right join
+            (select count(id) as returnNum, day(date(return_time)) as days
+             from busi_order
+             where deleted = 0
+               and return_time is not null
+               and month(return_time) = month(now())
+             group by days) ret
+            on r.days = ret.days
+        order by days;
+    </select>
+    <select id="sumRentPayMonth" resultType="com.example.rental.vo.FinanceCostVo">
+        select sum(rent_payable) countRentPayable,
+               sum(rent_actual) countRentActual
+        from busi_order
+        where deleted = 0
+          and return_time is not null
+          and month(return_time) = month(now())
+    </select>
+    <select id="sumDepositMonth" resultType="java.lang.Integer">
+        select sum(deposit)
+        from busi_order
+        where deleted = 0
+          and month(return_time) = month(now())
+    </select>
+
+
+</mapper>

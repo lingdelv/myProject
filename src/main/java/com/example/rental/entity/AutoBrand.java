@@ -11,14 +11,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-/**
- * <p>
- *
- * </p>
- *
- * @author teacher_shi
- * @since 2024-06-08
- */
+
 @Getter
 @Setter
 @Accessors(chain = true)

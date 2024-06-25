@@ -1,16 +1,17 @@
 package com.example.rental.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.rental.entity.Customer;
 import com.baomidou.mybatisplus.extension.service.IService;
 
-/**
- * <p>
- *  服务类
- * </p>
- *
- * @author teacher_shi
- * @since 2024-06-08
- */
+import java.util.List;
+
+
 public interface ICustomerService extends IService<Customer> {
 
+    boolean delete(String ids);
+
+    Page<Customer> searchByPage(Page<Customer> page, Customer customer);
+
+    Customer selectInfoByTel(Customer customer);
 }

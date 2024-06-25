@@ -1,8 +1,7 @@
 package com.example.rental.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -12,14 +11,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-/**
- * <p>
- * 
- * </p>
- *
- * @author teacher_shi
- * @since 2024-06-08
- */
+
 @Getter
 @Setter
 @Accessors(chain = true)
@@ -39,6 +31,9 @@ public class Customer implements Serializable {
     @ApiModelProperty("客户年龄")
     private Integer age;
 
+    @ApiModelProperty("性别 0女 1男")
+    private Integer gender;
+
     @ApiModelProperty("手机号码")
     private String tel;
 
@@ -46,17 +41,24 @@ public class Customer implements Serializable {
     private LocalDate birthday;
 
     @ApiModelProperty("客户状态 0黑名单 1白名单")
-    private Boolean status;
+    private Integer status;
 
     @ApiModelProperty("身份证号码")
     private String idNum;
 
     @ApiModelProperty("创建时间")
+    @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
     @ApiModelProperty("修改时间")
-    private LocalDateTime updateId;
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    private LocalDateTime updateTime;
 
     @ApiModelProperty("是否删除")
     private Boolean deleted;
+
+    @TableField(exist = false)
+    private Integer lowAge;
+    @TableField(exist = false)
+    private Integer HighAge;
 }

@@ -58,6 +58,7 @@ public class RoleController {
     }
 
     @PutMapping
+    @PreAuthorize("hasAuthority('sys:role:edit')")
     public Result update(@RequestBody Role role){
 
         return roleService.updateById(role)? Result.success():Result.fail();
@@ -69,6 +70,7 @@ public class RoleController {
     }
 
     @DeleteMapping("/{ids}")
+    @PreAuthorize("hasAuthority('sys:role:delete')")
     public Result delete(@PathVariable String ids){
         return roleService.delete(ids)? Result.success():Result.fail();
     }
@@ -93,6 +95,13 @@ public class RoleController {
     @GetMapping("/{roleId}/{permissionIds}")
     public Result assignPermission(@PathVariable Integer roleId,
                                    @PathVariable String permissionIds){
+        //获取用户信息
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+        if(user.getIsAdmin()!=1){
+            //超级管理员验证
+            return Result.fail().setMessage("非超级管理员，不能操作");
+        }
         // 将传入的权限ID字符串转换为整数列表
         List<Integer> list = Arrays.stream(permissionIds.split(","))
                 .map(Integer::parseInt)

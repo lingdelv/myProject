@@ -1,8 +1,7 @@
 package com.example.rental.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -12,14 +11,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-/**
- * <p>
- * 
- * </p>
- *
- * @author teacher_shi
- * @since 2024-06-08
- */
+
 @Getter
 @Setter
 @Accessors(chain = true)
@@ -43,7 +35,7 @@ public class AutoInfo implements Serializable {
     private Integer brandId;
 
     @ApiModelProperty("车辆类型 0燃油车 1电动车 2混东车")
-    private Boolean infoType;
+    private Integer infoType;
 
     @ApiModelProperty("车辆颜色")
     private String color;
@@ -70,12 +62,14 @@ public class AutoInfo implements Serializable {
     private Integer deposit;
 
     @ApiModelProperty("状态 0未租 1已租 2维保 3自用")
-    private Boolean status;
+    private Integer status;
 
     @ApiModelProperty("创建时间")
+    @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
     @ApiModelProperty("最后一次更新时间")
+    @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
 
     @ApiModelProperty("应保次数")
@@ -85,5 +79,20 @@ public class AutoInfo implements Serializable {
     private Integer actualNum;
 
     @ApiModelProperty("是否删除")
-    private Boolean deleted;
+    private Integer deleted;
+
+    @TableField(exist = false)
+    private String brandName;
+
+    @TableField(exist = false)
+    private String makerName;
+
+    @TableField(exist = false)
+    private Double lowRent;
+    @TableField(exist = false)
+    private Double highRent;
+    @TableField(exist = false)
+    private LocalDate registrationDateStart;
+    @TableField(exist = false)
+    private LocalDate registrationDateEnd;
 }

@@ -16,14 +16,7 @@ import lombok.experimental.Accessors;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-/**
- * <p>
- *
- * </p>
- *
- * @author teacher_shi
- * @since 2024-06-08
- */
+
 @Data
 @Accessors(chain = true)
 @TableName("sys_user")
